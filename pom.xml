@@ -64,7 +64,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.jordivicent.flightsfx/com.jordivicent.flightsfx.HelloApplication</mainClass>
+                            <mainClass>com.jordivicent.flightsfx/com.jordivicent.flightsfx.FlightsFX</mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>

@@ -7,11 +7,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class FXMLMainView extends Application {
+public class FlightsFX extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(FXMLMainView.class.getResource("FXMLMainView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
+        FXMLLoader fxmlLoader = new FXMLLoader(FlightsFX.class.getResource("FXMLMainView.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 550, 400);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();

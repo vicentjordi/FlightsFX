@@ -5,13 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class FileUtils {
     //Cargar Vuelos
-    static ArrayList<String> loadFlights(){
-
-        List<String> flight = new ArrayList<String>();
+    public static ArrayList<String> loadFlights(){
         String nomFichero = "flights.txt";
         ArrayList<String> listflight = new ArrayList<String>();
 

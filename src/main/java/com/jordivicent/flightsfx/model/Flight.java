@@ -9,16 +9,16 @@ public class Flight {
     private LocalDateTime dateExit;
     private LocalTime duration;
 
-    ///Constructor Número de Vuelo
-    public Flight(String numFlight) {
+    //CONSTRUCTOR
+    public Flight(String numFlight, String destination, LocalDateTime dateExit, LocalTime duration){
         this.numFlight = numFlight;
-    }
-
-    //Constructor atributos
-    public Flight(String destination, LocalDateTime dateExit, LocalTime duration){
         this.destination = destination;
         this.dateExit = dateExit;
         this.duration = duration;
+    }
+    ///CONSTRUCTOR
+    public Flight(String numFlight) {
+        this.numFlight=numFlight;
     }
 
     //Getters & Setters

@@ -15,10 +15,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.OptionalDouble;
+import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class FXMLMainViewController {
     //TableView
@@ -164,11 +163,41 @@ public class FXMLMainViewController {
     }
 
     private void nextFlights(){
+        //Crea Variable para obtener fecha actual y poder comprar con los vuelos.
+        LocalDateTime now = LocalDateTime.now();
+
+        //Crea una nueva Observable list para filtrar los próximos 5 vuelos.
         ObservableList<Flight> filterNext;
+
+        List<Flight> nextFlight = filterFlights(FileUtils.loadFlights(), ft -> ft.getDateExit().isAfter(now));
+
+        Collections.sort(nextFlight, new Comparator<Flight>() {
+            @Override
+            public int compare(Flight o1, Flight o2) {
+                return o1.getDateExit().compareTo(o2.getDateExit());
+            }
+        });
+
+        nextFlight = nextFlight.stream().limit(5).collect(Collectors.toList());
+
+        filterNext = FXCollections.observableArrayList(nextFlight);
+
+
+        tvFlights.getItems().clear();
+
+        tvFlights.setItems(filterNext);
     }
 
     private void durationAverage(){
+        List<Flight> flights = FileUtils.loadFlights();
 
+        //OptionalDouble avgFlight = flights.stream();
+
+        Alert dialog = new Alert(Alert.AlertType.INFORMATION);
+        dialog.setTitle("Duration Average");
+        dialog.setHeaderText("Average duration of all flights");
+        dialog.setContentText("Average: ");
+        dialog.showAndWait();
     }
     @FXML
     public void btnDeleteAction(ActionEvent actionEvent) {

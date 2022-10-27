@@ -6,4 +6,5 @@ module com.jordivicent.flightsfx {
 
     opens com.jordivicent.flightsfx to javafx.fxml;
     exports com.jordivicent.flightsfx;
+    opens com.jordivicent.flightsfx.model to javafx.base;
 }

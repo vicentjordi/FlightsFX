@@ -28,14 +28,14 @@
             <TextField fx:id="tfFlightNumber" layoutX="100.0" layoutY="13.0" prefHeight="26.0" prefWidth="111.0" />
             <Label layoutX="227.0" layoutY="17.0" prefHeight="18.0" prefWidth="70.0" text="Destination:" />
             <TextField fx:id="tfDestination" layoutX="298.0" layoutY="14.0" />
-            <Button fx:id="btnAdd" layoutX="491.0" layoutY="14.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="52.0" text="Add" />
+            <Button fx:id="btnAdd" layoutX="465.0" layoutY="13.0" mnemonicParsing="false" onAction="#btnAddAction" prefHeight="26.0" prefWidth="52.0" text="Add" />
             <Label layoutX="14.0" layoutY="67.0" prefHeight="18.0" prefWidth="70.0" text="Departure:" />
             <TextField fx:id="tfDeparture" layoutX="84.0" layoutY="63.0" />
             <Label layoutX="248.0" layoutY="67.0" prefHeight="18.0" prefWidth="52.0" text="Duration:" />
             <TextField fx:id="tfDuration" layoutX="300.0" layoutY="63.0" />
-            <Button fx:id="btnDelete" layoutX="491.0" layoutY="63.0" mnemonicParsing="false" text="Delete" />
+            <Button fx:id="btnDelete" disable="true" layoutX="466.0" layoutY="63.0" mnemonicParsing="false" onAction="#btnDeleteAction" text="Delete" />
             <ChoiceBox fx:id="cbFormFilter" layoutX="60.0" layoutY="135.0" prefHeight="26.0" prefWidth="334.0" />
-            <Button fx:id="btnFilter" layoutX="409.0" layoutY="135.0" mnemonicParsing="false" text="Apply Filter" />
+            <Button fx:id="btnFilter" layoutX="409.0" layoutY="135.0" mnemonicParsing="false" onAction="#btnFilterAction" text="Apply Filter" />
          </children></AnchorPane>
   </items>
 </SplitPane>

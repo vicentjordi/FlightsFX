@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -189,20 +190,67 @@ public class FXMLMainViewController {
     }
 
     private void durationAverage(){
+        DateTimeFormatter formatDurat = DateTimeFormatter.ofPattern("H:mm");
         List<Flight> flights = FileUtils.loadFlights();
 
-        //OptionalDouble avgFlight = flights.stream();
+        OptionalDouble avgFlight = flights.stream().mapToDouble(Flight -> Flight.getDuration().getHour()).average();
 
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle("Duration Average");
         dialog.setHeaderText("Average duration of all flights");
-        dialog.setContentText("Average: ");
+        dialog.setContentText("Average: " + avgFlight.getAsDouble());
         dialog.showAndWait();
     }
     @FXML
-    public void btnDeleteAction(ActionEvent actionEvent) {
+    public void btnAddAction(ActionEvent actionEvent) {
+        DateTimeFormatter formatDepart = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter formatDurat = DateTimeFormatter.ofPattern("H:mm");
+
+
+        if (tfFlightNumber.getText().equals("") || tfDestination.getText().equals("") ||
+                tfDeparture.getText().equals("") || tfDuration.getText().equals("")){
+
+            MessageUtils.errorAddFlight();
+
+        }else{
+            try {
+                List<Flight> flight = FileUtils.loadFlights();
+                flight.add(
+                        new Flight(tfFlightNumber.getText(), tfDestination.getText(),
+                                LocalDateTime.parse(tfDeparture.getText(), formatDepart),
+                                        LocalTime.parse(tfDuration.getText(), formatDurat))
+                );
+
+                FileUtils.saveFlights(flight);
+
+                tfFlightNumber.clear();
+                tfDestination.clear();
+                tfDeparture.clear();
+                tfDuration.clear();
+
+               allFlights();
+
+            }catch (Exception e){
+                MessageUtils.formatError();
+            }
+        }
     }
     @FXML
-    public void btnAddAction(ActionEvent actionEvent) {
+    public void btnDeleteAction(ActionEvent actionEvent) {
+        ObservableList<Flight> delItem;
+        delItem= tvFlights.getSelectionModel().getSelectedItems();
+
+        List<Flight> delFlight = FileUtils.loadFlights();
+        delFlight.removeIf(Flight -> Flight.getNumFlight().equals(delItem.get(0).getNumFlight()));
+
+        FileUtils.saveFlights(delFlight);
+        allFlights();
+    }
+
+
+    public void itemClicked(MouseEvent mouseEvent) {
+        if (tvFlights.getSelectionModel().getSelectedItems()!=null){
+            btnDelete.setDisable(false);
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.jordivicent.flightsfx.model;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Flight {
     private String numFlight;
@@ -52,5 +53,10 @@ public class Flight {
 
     public void setDuration(LocalTime duration) {
         this.duration = duration;
+    }
+
+    @Override
+    public String toString(){
+        return numFlight + ";" + destination + ";" + DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm").format(dateExit) + ";" + duration;
     }
 }

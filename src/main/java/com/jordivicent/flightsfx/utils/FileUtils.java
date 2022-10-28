@@ -32,7 +32,7 @@ public class FileUtils {
     //Guardar Vuelos
     public static void saveFlights(List<Flight> flights){
         try(PrintWriter pw = new PrintWriter("flights.txt")){
-
+            flights.stream().forEach(f-> pw.println(f.toString()));
         }catch (Exception e){
             e.printStackTrace();
         }

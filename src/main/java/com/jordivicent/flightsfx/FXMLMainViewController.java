@@ -6,11 +6,14 @@ import com.jordivicent.flightsfx.utils.MessageUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.WindowEvent;
 
+import java.io.OptionalDataException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -114,7 +117,7 @@ public class FXMLMainViewController {
                 durationAverage();
                 break;
             default:
-                System.out.println("Seleccione una operación válida");
+                MessageUtils.errorFilterButton();
         }
     }
     private void allFlights(){
@@ -170,8 +173,10 @@ public class FXMLMainViewController {
         //Crea una nueva Observable list para filtrar los próximos 5 vuelos.
         ObservableList<Flight> filterNext;
 
+        //Compara la fecha del vuelo con la actual para descartar vuelos ya echos
         List<Flight> nextFlight = filterFlights(FileUtils.loadFlights(), ft -> ft.getDateExit().isAfter(now));
 
+        //Compara los vuelos entre ellos y los ordena
         Collections.sort(nextFlight, new Comparator<Flight>() {
             @Override
             public int compare(Flight o1, Flight o2) {
@@ -179,6 +184,7 @@ public class FXMLMainViewController {
             }
         });
 
+        //Limita la lista para que solo muestre 5 vuelos
         nextFlight = nextFlight.stream().limit(5).collect(Collectors.toList());
 
         filterNext = FXCollections.observableArrayList(nextFlight);
@@ -195,10 +201,11 @@ public class FXMLMainViewController {
 
         OptionalDouble avgFlight = flights.stream().mapToDouble(Flight -> Flight.getDuration().getHour()).average();
 
+
         Alert dialog = new Alert(Alert.AlertType.INFORMATION);
         dialog.setTitle("Duration Average");
         dialog.setHeaderText("Average duration of all flights");
-        dialog.setContentText("Average: " + avgFlight.getAsDouble());
+        dialog.setContentText("Average: " + avgFlight.toString());
         dialog.showAndWait();
     }
     @FXML
@@ -206,23 +213,29 @@ public class FXMLMainViewController {
         DateTimeFormatter formatDepart = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
         DateTimeFormatter formatDurat = DateTimeFormatter.ofPattern("H:mm");
 
-
+        //Comprueba que todos los campos no estan vacios
         if (tfFlightNumber.getText().equals("") || tfDestination.getText().equals("") ||
                 tfDeparture.getText().equals("") || tfDuration.getText().equals("")){
 
+            //Si hay alguno vacio, muestra un error.
             MessageUtils.errorAddFlight();
 
         }else{
             try {
+                //Si no esta vacio, carga la lista
                 List<Flight> flight = FileUtils.loadFlights();
+
+                //Añade un nuevo item a la lista
                 flight.add(
                         new Flight(tfFlightNumber.getText(), tfDestination.getText(),
                                 LocalDateTime.parse(tfDeparture.getText(), formatDepart),
                                         LocalTime.parse(tfDuration.getText(), formatDurat))
                 );
 
+                //Guarda la lista
                 FileUtils.saveFlights(flight);
 
+                //Vacia todos  los campos
                 tfFlightNumber.clear();
                 tfDestination.clear();
                 tfDeparture.clear();
@@ -231,26 +244,40 @@ public class FXMLMainViewController {
                allFlights();
 
             }catch (Exception e){
+                //Si hay algun error en el formato de los dados muestra este error
                 MessageUtils.formatError();
             }
         }
     }
     @FXML
     public void btnDeleteAction(ActionEvent actionEvent) {
+        //Toma el item seleccionado de la lista
         ObservableList<Flight> delItem;
         delItem= tvFlights.getSelectionModel().getSelectedItems();
 
+        //Busca el Item seleccionado en el documento flight.txt y lo borra
         List<Flight> delFlight = FileUtils.loadFlights();
         delFlight.removeIf(Flight -> Flight.getNumFlight().equals(delItem.get(0).getNumFlight()));
 
+        //Guarda la lista
         FileUtils.saveFlights(delFlight);
         allFlights();
+
+        //Desactiva el btnDelete
+        btnDelete.setDisable(true);
     }
-
-
     public void itemClicked(MouseEvent mouseEvent) {
+        //En el momento en el que se hace click sobre el tableview, si se selecciona un Item habilita el btnDelete.
         if (tvFlights.getSelectionModel().getSelectedItems()!=null){
             btnDelete.setDisable(false);
         }
+    }
+
+    public void  close(){
+        ObservableList<Flight> saveFlight;
+
+        saveFlight = FXCollections.observableArrayList(FileUtils.loadFlights());
+
+        FileUtils.saveFlights(saveFlight);
     }
 }
